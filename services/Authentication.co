@@ -1,7 +1,18 @@
 angular.module('jf')
-.service 'Authentication', (AjaxAction, Session, Cookie)->
+.service 'Authentication', (AjaxAction, Session, Cookie, $location)->
 
 	# @isLoggedInDfd = $.Deferred()
+
+	# Sprawdza czy istnieje w URLu parametr o nazwie cookieName
+	# -> Jesli tak to go zapisuje jako cookie.
+	@checkUrlCookie = (cookieName)~>
+		cookieValue = $location.search()[cookieName]
+		if cookieValue
+			console.log "AUTHENTICATION", "Setting authentication cookie #cookieName=#cookieValue"
+			Cookie.create cookieName, cookieValue, 1
+
+			# TODO: nie dziala, powinno usuwac z historii
+			$location.replace().search(cookieName, null)
 
 	@discoverLoginState = ~>
 		dfd = $.Deferred()
@@ -36,7 +47,7 @@ angular.module('jf')
 		AjaxAction().post("logout")
 		.done ->
 			Session.logout!
-			Cookie.erase("JSESSIONID");
+			Cookie.erase("JSESSIONID")
 			# @isLoggedInDfd := $.Deferred()
 			dfd.resolve "OK"
 		.fail (error)->

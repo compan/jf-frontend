@@ -1,6 +1,15 @@
 (function(){
-  angular.module('jf').service('Authentication', function(AjaxAction, Session, Cookie){
+  angular.module('jf').service('Authentication', function(AjaxAction, Session, Cookie, $location){
     var this$ = this;
+    this.checkUrlCookie = function(cookieName){
+      var cookieValue;
+      cookieValue = $location.search()[cookieName];
+      if (cookieValue) {
+        console.log("AUTHENTICATION", "Setting authentication cookie " + cookieName + "=" + cookieValue);
+        Cookie.create(cookieName, cookieValue, 1);
+        return $location.replace().search(cookieName, null);
+      }
+    };
     this.discoverLoginState = function(){
       var dfd;
       dfd = $.Deferred();

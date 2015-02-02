@@ -1,6 +1,6 @@
 (function(){
   angular.module('jf').controller('ApplicationCtrl', function($scope, CONFIG, Authorization, Authentication, Session, $location, AjaxAction, Spinner){
-    var ref$, spinner, ref1$;
+    var ref$, spinner, x0$, ref1$;
     if (CONFIG.debug) {
       window.appScope = $scope;
       window.CONFIG = CONFIG;
@@ -20,6 +20,10 @@
       }
     };
     Session.applicationScope = $scope;
+    x0$ = CONFIG.auth.cookieName;
+    if (x0$) {
+      Authentication.checkUrlCookie(x0$);
+    }
     function handleLocationChange(event, next){
       var nextPath;
       console.log("next ------>", next);
